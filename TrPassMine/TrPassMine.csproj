@@ -56,5 +56,8 @@
     <None Include="packages.config" />
     <None Include="pub\TrPassMine.zip" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="pub\cookie.jpg" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
