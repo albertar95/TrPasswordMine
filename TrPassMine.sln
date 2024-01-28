@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.2092
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrPassMine", "TrPassMine\TrPassMine.csproj", "{003FAB65-90FE-4215-8274-E5B8C8CFFEDD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{003FAB65-90FE-4215-8274-E5B8C8CFFEDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{003FAB65-90FE-4215-8274-E5B8C8CFFEDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{003FAB65-90FE-4215-8274-E5B8C8CFFEDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{003FAB65-90FE-4215-8274-E5B8C8CFFEDD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8395BA8F-4659-405B-AB2E-2A1DAB7088C0}
+	EndGlobalSection
+EndGlobal
