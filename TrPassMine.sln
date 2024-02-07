@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.28307.2092
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrPassMine", "TrPassMine\TrPassMine.csproj", "{003FAB65-90FE-4215-8274-E5B8C8CFFEDD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PasswordGenerator", "PasswordGenerator\PasswordGenerator.csproj", "{27732E41-8E42-44A6-93BD-CFD5D1F36ABD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{003FAB65-90FE-4215-8274-E5B8C8CFFEDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{003FAB65-90FE-4215-8274-E5B8C8CFFEDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{003FAB65-90FE-4215-8274-E5B8C8CFFEDD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{27732E41-8E42-44A6-93BD-CFD5D1F36ABD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{27732E41-8E42-44A6-93BD-CFD5D1F36ABD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{27732E41-8E42-44A6-93BD-CFD5D1F36ABD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{27732E41-8E42-44A6-93BD-CFD5D1F36ABD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
