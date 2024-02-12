@@ -27,7 +27,7 @@ namespace PasswordGenerator
             _Length = Length;
             _CharTypes = charTypes;
         }
-        public IEnumerable<string> GeneratePassword()
+        public void GeneratePassword()
         {
             double rowCount = GetRowCount();//9
             int rowLength = rowCount > int.MaxValue ? int.MaxValue : Convert.ToInt32(rowCount);//9
@@ -38,7 +38,7 @@ namespace PasswordGenerator
             var corresCount = correspondingChars.Count();//3
 
             int corresIndex = 0;
-            prepareChunckFiles();
+            //prepareChunckFiles();
             for (int i = _Length - 1; i >= 0; i--)
             {
                 for (int j = 0; j < rowLength / Math.Pow(corresCount, i); j++)
@@ -46,19 +46,80 @@ namespace PasswordGenerator
                     var period = Convert.ToInt32(Math.Pow(corresCount, i));
                     for (int x = 0; x < period; x++)
                     {
-                        //passwordMatrix[(j * period) + x, i] = correspondingChars[corresIndex];
-                        WriteInTempFile(correspondingChars[corresIndex],i);
+                        passwordMatrix[(j * period) + x, i] = correspondingChars[corresIndex];
+                        //WriteInTempFile(correspondingChars[corresIndex],i);
                     }
                     corresIndex++;
                     if (corresIndex >= corresCount)
                         corresIndex = 0;
                 }
             }
-            return MatrixToRow(passwordMatrix);
+            StreamWriteIntoFile(passwordMatrix);
         }
-        private List<string> MatrixToRow(string[,] passwordMatrix)
+        public void GeneratePasswordPivot()
         {
-            List<string> result = new List<string>();
+            double rowCount = GetRowCount();//27
+            int rowLength = rowCount > int.MaxValue ? int.MaxValue : Convert.ToInt32(rowCount);//27
+            int[] passwordReputation = new int[_Length];
+            string[] correspondingChars = GetChars().ToArray();//a,b,c
+            var corresCount = correspondingChars.Count();//3
+            int chunks = Convert.ToInt32(Math.Pow(10,7));
+            for (int i = 0; i < _Length; i++)
+            {
+                passwordReputation[i] = Convert.ToInt32(Math.Pow(corresCount,i));
+            }
+            string current = "";
+            if(rowLength > chunks)
+            {
+                for (int i = 0; i < rowLength / chunks; i++)
+                {
+                    for (int j = 0; j < chunks; j++)
+                    {
+                        current = "";
+                        for (int k = 0; k < _Length; k++)
+                        {
+                            var rowIndex = (i * chunks) + j;
+                            current += correspondingChars[((rowIndex * passwordReputation[k]) % (corresCount))];
+                        }
+                        WriteSinglePassword(current, i);
+                    }
+                }
+            }else
+            {
+                for (int j = 0; j < rowLength; j++)
+                {
+                    current = "";
+                    for (int k = 0; k < _Length; k++)
+                    {
+                        current += correspondingChars[j / passwordReputation[k]];
+                    }
+                    WriteSinglePassword(current, 0);
+                }
+            }
+        }
+        private void WriteSinglePassword(string pass,int chunk)
+        {
+            File.AppendAllLines(Path.Combine(DestinationFilePath,$"passwords{chunk}.txt"),new List<string>() { pass });
+        }
+        private void StreamWriteIntoFile(string[,] passwordMatrix)
+        {
+            var path = Path.Combine(DestinationFilePath, "Generatedpasswords.txt");
+            if (File.Exists(path))
+                File.Delete(path);
+            Console.WriteLine("password generator is processing.please wait ..." + Environment.NewLine);
+            StreamWriter sw = new StreamWriter(path);
+            //MatrixToRow(passwordMatrix);
+            foreach (var pass in MatrixToRow(passwordMatrix))
+            {
+                sw.WriteLine(pass);
+            }
+            Console.WriteLine("all passwords generated and saved in file.Done!" + Environment.NewLine);
+            sw.Close();
+            sw.Dispose();
+        }
+        private IEnumerable<string> MatrixToRow(string[,] passwordMatrix)
+        {
+            //List<string> result = new List<string>();
             string current = "";
             for (int i = 0; i < passwordMatrix.GetLength(0); i++)
             {
@@ -67,9 +128,10 @@ namespace PasswordGenerator
                 {
                     current += passwordMatrix[i, j];
                 }
-                result.Add(current);
+                //result.Add(current);
+                yield return current;
             }
-            return result;
+            //return result;
         }
         public double GetRowCount()
         {

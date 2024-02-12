@@ -10,11 +10,7 @@ namespace PasswordGenerator
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("enter password length");
-            var len = int.Parse(Console.ReadLine());
-            var generator = new Generator(len,new List<CharType>() {  CharType.numbers });
-            var result = generator.GeneratePassword();
-            Console.ReadKey();
+            GatherInputs();
         }
         static void GatherInputs()
         {
@@ -45,6 +41,7 @@ namespace PasswordGenerator
             Console.WriteLine("13.numbers + uppercase charachters + special charachters");
             Console.WriteLine("14.numbers + lowercase charachters + special charachters");
             Console.WriteLine("15.lowercase charachters + uppercase charachters + special charachters");
+            Console.WriteLine("16.test");
             Console.WriteLine(Environment.NewLine);
             if (!int.TryParse(Console.ReadLine(), out charachtersOption))
             {
@@ -113,6 +110,9 @@ namespace PasswordGenerator
                     correspondings.Add(CharType.uppercaseCharacters);
                     correspondings.Add(CharType.specials);
                     break;
+                case 16:
+                    correspondings.Add(CharType.test);
+                    break;
             }
             ProcessInputs(passwordLength,correspondings);
             GatherInputs();
@@ -137,6 +137,7 @@ namespace PasswordGenerator
             switch (fire.ToLower())
             {
                 case "y":
+                    gen.GeneratePasswordPivot();
                     break;
                 case "n":
                     Environment.Exit(0);
