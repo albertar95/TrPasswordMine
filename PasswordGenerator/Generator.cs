@@ -22,10 +22,13 @@ namespace PasswordGenerator
             "^", ",","-", "{", "}", "(", ")", "[", "]", "<", ">" };
         private List<string> test = new List<string>() { "a","b","c" };
         public string DestinationFilePath { get; set; } = ConfigurationManager.AppSettings["DestinationFilePath"];
+        public string ChunkSizeCount { get; set; } = ConfigurationManager.AppSettings["PasswordFileChunkCount"];
+        private string FilenamePrefix;
         public Generator(int Length, List<CharType> charTypes)
         {
             _Length = Length;
             _CharTypes = charTypes;
+            FilenamePrefix = $"passwords_{DateTime.Now.Ticks}_";
         }
         public void GeneratePassword()
         {
@@ -59,17 +62,19 @@ namespace PasswordGenerator
         public void GeneratePasswordPivot()
         {
             double rowCount = GetRowCount();//27
-            int rowLength = rowCount > int.MaxValue ? int.MaxValue : Convert.ToInt32(rowCount);//27
-            int[] passwordReputation = new int[_Length];
+            long rowLength = rowCount > Int64.MaxValue ? Int64.MaxValue : Convert.ToInt64(rowCount);//27
+            long[] passwordReputation = new long[_Length];
             string[] correspondingChars = GetChars().ToArray();//a,b,c
             var corresCount = correspondingChars.Count();//3
-            int chunks = Convert.ToInt32(Math.Pow(10,7));
+            long chunks = Convert.ToInt64(ChunkSizeCount);
             for (int i = 0; i < _Length; i++)
             {
-                passwordReputation[i] = Convert.ToInt32(Math.Pow(corresCount,i));
+                passwordReputation[i] = Convert.ToInt64(Math.Pow(corresCount,i));
             }
             string current = "";
-            if(rowLength > chunks)
+            int index = 0;
+            Console.WriteLine("password generation process started.please wait ...");
+            if (rowLength > chunks)
             {
                 for (int i = 0; i < rowLength / chunks; i++)
                 {
@@ -79,10 +84,12 @@ namespace PasswordGenerator
                         for (int k = 0; k < _Length; k++)
                         {
                             var rowIndex = (i * chunks) + j;
-                            current += correspondingChars[((rowIndex * passwordReputation[k]) % (corresCount))];
+                            index = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(rowIndex) / Convert.ToDouble(passwordReputation[k]))) % corresCount;
+                            current += correspondingChars[index];
                         }
                         WriteSinglePassword(current, i);
                     }
+                    Console.WriteLine($"{((i+1)*chunks).ToString("#,#")} passwords created.please wait ...");
                 }
             }else
             {
@@ -91,15 +98,17 @@ namespace PasswordGenerator
                     current = "";
                     for (int k = 0; k < _Length; k++)
                     {
-                        current += correspondingChars[j / passwordReputation[k]];
+                        index = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(j) / Convert.ToDouble(passwordReputation[k]))) % corresCount;
+                        current += correspondingChars[index];
                     }
                     WriteSinglePassword(current, 0);
                 }
             }
+            Console.WriteLine("all passwords generated successfully.Done!");
         }
         private void WriteSinglePassword(string pass,int chunk)
         {
-            File.AppendAllLines(Path.Combine(DestinationFilePath,$"passwords{chunk}.txt"),new List<string>() { pass });
+            File.AppendAllLines(Path.Combine(DestinationFilePath,$"{FilenamePrefix}{chunk}.txt"),new List<string>() { pass });
         }
         private void StreamWriteIntoFile(string[,] passwordMatrix)
         {
@@ -236,21 +245,6 @@ namespace PasswordGenerator
                 }
             }
             return rowCount;
-        }
-        private void prepareChunckFiles()
-        {
-            for (int i = 0; i < _Length; i++)
-            {
-                var path = Path.Combine(DestinationFilePath, $"chunk{i}.txt");
-                if (File.Exists(path))
-                    File.Delete(path);
-                File.Create(path);
-                File.SetAttributes(path, File.GetAttributes(path) | FileAttributes.Hidden);
-            }
-        }
-        private void WriteInTempFile(string corresChar,int fileId)
-        {
-            File.AppendAllLines(Path.Combine(DestinationFilePath, $"chunk{fileId}.txt"), new List<string>() { corresChar });
         }
     }
     public enum CharType

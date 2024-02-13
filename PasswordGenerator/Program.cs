@@ -10,7 +10,16 @@ namespace PasswordGenerator
     {
         static void Main(string[] args)
         {
-            GatherInputs();
+            programStart:
+            try
+            {
+                GatherInputs();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                goto programStart;
+            }
         }
         static void GatherInputs()
         {
@@ -124,8 +133,8 @@ namespace PasswordGenerator
             var correspondingCount = gen.GetCharsCount();
             Console.WriteLine(Environment.NewLine + "----------------------------------------" + Environment.NewLine);
             Console.WriteLine($"you have choose {length} as password length and {correspondingCount} characters for generating passwords.");
-            Console.WriteLine($"total count of passwords = {rowCount}");
-            if(rowCount >= 2147483647)
+            Console.WriteLine($"total count of passwords = {rowCount.ToString("#,#")}");
+            if(rowCount >= 9223372036854775807)
             {
                 Console.WriteLine("total count of password is too big and its not possible to continue");
                 return;
@@ -149,19 +158,24 @@ namespace PasswordGenerator
 
 
         }
-        static string CalculateFileSize(double rowCount,int CorresCount)
+        static string CalculateFileSize(double rowCount, int CorresCount)
         {
             var totalChars = rowCount * CorresCount;
-            if (totalChars < 1024)
+            if (totalChars <= 1024)
                 return "1 kb";
-            else if (totalChars > 1024 && totalChars < 1048576)//kb
+            else if (totalChars > 1024 && totalChars < Math.Pow(1024, 2))//kb
                 return $"{totalChars / 1024} kb";
-            else if (totalChars > 1048576 && totalChars < 1073741824)//mb
-                return $"{totalChars / 1048576} mb";
-            else if (totalChars > 1073741824 && totalChars < 966367641600)//gb
-                return $"{totalChars / 1073741824} gb";
+            else if (totalChars >= Math.Pow(1024, 2) && totalChars < Math.Pow(1024, 3))//mb
+                return $"{totalChars / Math.Pow(1024, 2)} mb";
             else
-                return "more that 900 gb!";
+            {
+                if (totalChars > Math.Pow(1024, 3) && totalChars < Math.Pow(1024, 4))//gb
+                    return $"{totalChars / Math.Pow(1024, 3)} gb";
+                else if (totalChars >= Math.Pow(1024, 4) && totalChars < (10 * Math.Pow(1024, 4)))//tb
+                    return $"{totalChars / Math.Pow(1024, 4)} tb";
+                else
+                    return "more that 10 tb!";
+            }
         }
     }
 }
