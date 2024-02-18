@@ -55,6 +55,7 @@
     <None Include="App.config" />
     <None Include="packages.config" />
     <None Include="pub\TrPassMine-v3.zip" />
+    <None Include="pub\TrPassMine.zip" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="pub\cookie.jpg" />
