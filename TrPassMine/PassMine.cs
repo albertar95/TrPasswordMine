@@ -16,7 +16,7 @@ namespace TrPassMine
         private readonly string filepath = ConfigurationManager.AppSettings["passwordFilePath"];
         private readonly string WalletADDR = ConfigurationManager.AppSettings["walletAddr"];
         private readonly string LoginCookie = ConfigurationManager.AppSettings["LoginCookie"];
-        private readonly Uri baseaddress = new Uri("https://btcdsi.com");
+        private readonly Uri baseaddress = new Uri("https://btckio.com");
         private readonly string targetUrl = "/index/withdraw/index.html?btwaf=1000000000000";
         private readonly HttpClient _client = null;
         private readonly int UrlChunkCount = int.Parse(ConfigurationManager.AppSettings["RequestCountAtTime"]);
